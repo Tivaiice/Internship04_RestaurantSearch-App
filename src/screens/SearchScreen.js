@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Text, View } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 import SearchBar from "../components/SearchBar";
-import useResults from '../hooks/useResults';
-import ResultsList from '../components/ResultsList';
-import { YellowBox } from 'react-native';
-YellowBox.ignoreWarnings(['Remote debugger']);
+import useResults from "../hooks/useResults";
+import ResultsList from "../components/ResultsList";
+import { YellowBox } from "react-native";
+YellowBox.ignoreWarnings(["Remote debugger"]);
 
-const SearchScreen = props => {
+const SearchScreen = ({ navigation }) => {
   const [term, setTerm] = useState("");
   const [searchApi, results, errorMessage] = useResults();
-  
+
   const filterResultsByPrice = (price) => {
     // price == '$' || '$$' || '$$$'
-    return results.filter(results => {
-        return results.price === price;
-    }); 
+    return results.filter((results) => {
+      return results.price === price;
+    });
   };
 
   return (
@@ -26,11 +26,25 @@ const SearchScreen = props => {
       />
 
       {errorMessage ? <Text>{errorMessage}</Text> : null}
-      <Text>We have found {results.length} results</Text>
-      <ResultsList results={filterResultsByPrice('$')} title="Cost Effective"/> 
-      <ResultsList results={filterResultsByPrice('$$')} title="Bit Pricier"/> 
-      <ResultsList results={filterResultsByPrice('$$$')} title="Big Spender"/> 
-       
+      <ScrollView>
+        {/* <Text>We have found {results.length}results</Text> */}
+
+        <ResultsList
+          results={filterResultsByPrice("$")}
+          title="Cost Effective"
+          navigation={navigation}
+        />
+        <ResultsList 
+          results={filterResultsByPrice("$$")} 
+          title="Bit Pricier" 
+          navigation={navigation}
+        />
+        <ResultsList
+          results={filterResultsByPrice("$$$")}
+          title="Big Spender"
+          navigation={navigation}
+        />
+      </ScrollView>
     </View>
   );
 };
